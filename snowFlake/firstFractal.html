@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<title>SnowFlake</title>
+        <meta charset='utf-8' />
+        <script src="fractal.js"></script>
+	</head>
+	<body>
+		<canvas height='650' width='750' id='example'></canvas>
+		<script>
+			var example = document.getElementById("example"),
+			ctx = example.getContext('2d');
+			ctx.fillStyle="#ffffff";
+			ctx.fillRect(0, 0, example.width, example.height);
+
+			var iteration = 0;
+			iteration = iterStep();
+
+			console.log("iteration step " + iteration);
+
+			var pOne = new Point(110,170);	
+			var pTwo = new Point(600,170);	
+			var pThree = findThirdPoint(pOne, pTwo);
+			var points = [];
+			var mainPoints = [];
+			var allPoints = [];
+			var drawAllPoints = [];
+			mainPoints.push(pOne);
+			mainPoints.push(pTwo);
+			mainPoints.push(pThree);
+			mainPoints.push(pOne);
+			ctx.strokeStyle = '#000000';
+
+			ctx.beginPath();
+			if(iteration == 1){
+				ctx.moveTo(pOne.x, pOne.y);
+				ctx.lineTo(pTwo.x, pTwo.y);
+				ctx.lineTo(pThree.x, pThree.y);
+				ctx.lineTo(pOne.x, pOne.y);
+			}
+			else{
+				for(var i = 0; i < iteration; i++){
+					iterations(mainPoints, points, allPoints);
+					points = [];
+					mainPoints = equalizer(mainPoints, allPoints);
+					drawAllPoints = allPoints;
+					allPoints = [];
+				}
+			}
+			draw(drawAllPoints);
+			ctx.stroke();
+		</script>
+	</body>
+</html>
