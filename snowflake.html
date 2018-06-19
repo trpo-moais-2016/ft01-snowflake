@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Cache-Control" content="no-cache"/>
+        
+        <script>
+            function drawSnowfalke(context, x1, y1, x2, y2, n) {
+                if (n === 0) {
+                    context.beginPath();
+                    context.moveTo(x1, y1);
+                    context.lineTo(x2, y2);
+                    context.stroke();
+                }
+                else {
+                    /*      C
+                           / \
+                      A--B     D---E
+                    */
+                    //треть отрезка (точка B)
+                    var xb = x1 + (x2 - x1)*1/3;
+                    var yb = y1 + (y2 - y1)*1/3;
+                    //две трети отрезка (точка D)
+                    var xd = x1 + (x2 - x1)*2/3;
+                    var yd = y1 + (y2 - y1)*2/3;
+                    var dx = x2 - x1;
+                    var dy = y2 - y1;
+                    var length = Math.sqrt(dx * dx + dy * dy);
+                    var angle = Math.atan2(dy, dx);
+                    var xc = xb + Math.cos(angle - Math.PI / 3) * length / 3;
+                    var yc = yb + Math.sin(angle - Math.PI / 3) * length / 3;
+
+                    drawSnowfalke(context, x1, y1, xb, yb, n-1);
+                    drawSnowfalke(context, xb, yb, xc, yc, n-1);
+                    drawSnowfalke(context, xc, yc, xd, yd, n-1);
+                    drawSnowfalke(context, xd, yd, x2, y2, n-1);
+                }
+            }
+
+            function run() {
+                var canvas = document.getElementById("canvas");
+                var canvasHeight = parseInt(canvas.getAttribute("height"));
+                var canvasWidth = parseInt(canvas.getAttribute("width"));
+                var context = canvas.getContext('2d');
+                context.lineWidth = "1";
+                context.strokeStyle = "blue";
+                var x1 = 100;
+                var y1 = 350;
+                var x3 = 500;
+                var y3 = 350;
+                var n = 5;
+                var x2 = (x1 + x3 - (y1- y3)*Math.sqrt(3))/2;
+                var y2 = (y1 + y3 - (x3 - x1)*Math.sqrt(3))/2;
+
+                drawSnowfalke(context, x1, y1, x2, y2, n);
+                drawSnowfalke(context, x2, y2, x3, y3, n);
+                drawSnowfalke(context, x3, y3, x1, y1, n);
+            }          
+        </script>  
+    </head> 
+    <body onload="run()">
+          <canvas height='1000' width='1000' id='canvas'></canvas>
+    </body>
+</html>
